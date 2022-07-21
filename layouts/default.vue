@@ -3,13 +3,15 @@
     <nav class="bg-gray-800">
       <div class="max-w mx-auto sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
-          <div class="body flex items-center">
-            <div class="flex-shrink-0 mx-2">
-              <img
-                class="h-8 w-8"
-                src="https://cdn3d.iconscout.com/3d/free/thumb/vuejs-2-5645873-4695731.png"
-                alt="Workflow"
-              />
+          <div class="body flex items-center px-2">
+            <div class="flex-shrink-0">
+              <nuxt-link to="/">
+                <img
+                  class="h-8 w-8"
+                  src="https://cdn3d.iconscout.com/3d/free/thumb/vuejs-2-5645873-4695731.png"
+                  alt="Vue"
+                />
+              </nuxt-link>
             </div>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4">
@@ -68,7 +70,7 @@
 
       <!-- Mobile menu -->
       <div class="md:hidden" id="mobile-menu">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div class="px-3 pt-2 pb-3 space-y-1 sm:px-3">
           <nuxt-link class="mx-5" :to="{ name: 'index' }">
             <a
               class="
@@ -124,7 +126,11 @@
 </template>
 
 <script>
-export default {};
+export default {
+  // middleware() {
+  //   console.log("midleware...default");
+  // },
+};
 </script>
 
 <style lang="scss" scoped>

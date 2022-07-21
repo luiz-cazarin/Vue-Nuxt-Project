@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="mx-2">index post</div>
+    <nuxt></nuxt>
   </div>
 </template>
 

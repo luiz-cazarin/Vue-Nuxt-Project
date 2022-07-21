@@ -13,16 +13,18 @@
     <div class="flex flex-col items-center justify-center">
       <div class="bg-white shadow rounded lg:w-1/3 md:w-1/2 w-full p-10 mt-16">
         <div class="w-full flex items-center justify-center pb-7">
-          <p class="text-2xl font-extrabold leading-6 text-gray-800">Login</p>
+          <p class="text-2xl font-extrabold leading-6 text-gray-800">
+            Register
+          </p>
         </div>
         <div>
           <lable class="text-sm font-medium leading-none text-gray-800">
-            Email
+            Name
           </lable>
           <input
-            aria-label="enter email adress"
+            aria-label="enter name"
             role="input"
-            type="email"
+            type="text"
             class="
               bg-gray-200
               border
@@ -38,6 +40,32 @@
               mt-2
             "
           />
+        </div>
+        <div class="mt-6 w-full">
+          <lable class="text-sm font-medium leading-none text-gray-800">
+            Email
+          </lable>
+          <div class="relative flex items-center justify-center">
+            <input
+              aria-label="enter email adress"
+              role="input"
+              type="email"
+              class="
+                bg-gray-200
+                border
+                rounded
+                focus:outline-none
+                text-xs
+                font-medium
+                leading-none
+                text-gray-800
+                py-3
+                w-full
+                pl-3
+                mt-2
+              "
+            />
+          </div>
         </div>
         <div class="mt-6 w-full">
           <lable class="text-sm font-medium leading-none text-gray-800">
@@ -84,13 +112,13 @@
                 w-full
               "
             >
-              Login
+              Register
             </button>
           </nuxt-link>
         </div>
         <div class="flex justify-center">
           <div class="mt-3">
-            <nuxt-link to="/Register">
+            <nuxt-link to="/Login">
               <a
                 class="
                   text-sm
@@ -99,7 +127,7 @@
                   hover:text-purple-900
                 "
               >
-                Create my account
+                Login
               </a>
             </nuxt-link>
           </div>
