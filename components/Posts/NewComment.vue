@@ -3,8 +3,14 @@
     <div class="bg-gray-50">
       <div class="max-w-7xl py-6 px-4 sm:px-6">
         <div>
-          <div class="text-2md pb-2 font-semibold text-gray-800">
+          <div
+            v-if="userAuth"
+            class="text-2md pb-2 font-semibold text-gray-800"
+          >
             Author: {{ userName }}
+          </div>
+          <div v-else class="text-2md pb-2 font-semibold text-gray-800">
+            Faça login para comentar
           </div>
         </div>
         <div>
@@ -65,22 +71,29 @@ export default {
     return {
       userName: "",
       bodyText: "",
+      userAuth: false,
+      user: null,
     };
   },
   mounted() {
-    this.userName = "Luiz Claudio";
-  },
-  computed: {
-    resetBodyText() {
-      if (this.bodyText === null) return null;
-    },
+    const user = JSON.parse(localStorage.getItem("user"));
+    this.user = user;
+    if (user !== null) {
+      this.userAuth = true;
+      this.userName = user.name;
+    } else {
+      this.userAuth = false;
+    }
   },
   methods: {
     newComment() {
-      console.log("x");
-      let comment = this.bodyText;
-      if (comment !== "") {
-        this.$emit("newComment", { comment });
+      if (this.bodyText !== "" && this.userAuth) {
+        const data = {
+          name: this.user.name,
+          email: this.user.email,
+          body: this.bodyText,
+        };
+        this.$emit("newComment", data);
       }
       this.bodyText = null;
     },

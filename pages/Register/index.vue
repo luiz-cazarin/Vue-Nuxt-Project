@@ -4,7 +4,7 @@
       min-h-screen
       bg-gradient-to-tl
       from-purple-900
-      to-indigo-800
+      to-indigo-700
       w-full
       py-16
       px-4
@@ -101,7 +101,7 @@
         <div class="mt-6 w-full">
           <fieldset data-role="controlgroup">
             <legend class="text-sm font-medium leading-none pb-3 text-gray-800">
-              Choose your gender:
+              Choose your gender
             </legend>
             <input
               v-model="user.gender"
@@ -156,7 +156,7 @@
                   hover:text-purple-900
                 "
               >
-                Login
+                Back to login
               </a>
             </nuxt-link>
           </div>
@@ -171,6 +171,11 @@ import api from "../../services/api";
 import AlertDialog from "../../components/Utils/AlertDialog.vue";
 
 export default {
+  head() {
+    return {
+      title: "Register",
+    };
+  },
   components: {
     AlertDialog,
   },

@@ -4,7 +4,7 @@
       min-h-screen
       bg-gradient-to-tl
       from-purple-900
-      to-indigo-800
+      to-indigo-700
       w-full
       py-16
       px-4
@@ -115,6 +115,11 @@
 import api from "../../services/api";
 import AlertDialog from "../../components/Utils/AlertDialog.vue";
 export default {
+  head() {
+    return {
+      title: "Login",
+    };
+  },
   components: {
     AlertDialog,
   },
@@ -132,10 +137,8 @@ export default {
         const user = {
           email: this.email,
           password: this.password,
-          token:
-            "6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c", // default token, could not authenticate via (gorest.co.in)
         };
-        var res = await api({
+        const res = await api({
           method: "GET",
           url: `/users?email=${user.email}`,
         });
@@ -145,6 +148,11 @@ export default {
             this.alert = false;
           }, 2000);
         } else {
+          localStorage.setItem("user", JSON.stringify(res.data[0]));
+          localStorage.setItem(
+            "token",
+            "6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"
+          ); // default token, could not authenticate via (gorest.co.in)
           this.$router.push("/");
         }
       }

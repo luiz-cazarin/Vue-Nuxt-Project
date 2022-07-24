@@ -3,7 +3,7 @@
     <nav class="bg-gray-800">
       <div class="max-w mx-auto sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
-          <div class="body flex items-center px-2">
+          <div class="w-full flex items-center px-2">
             <div class="flex-shrink-0">
               <nuxt-link to="/">
                 <img
@@ -18,7 +18,7 @@
                 <nuxt-link :to="{ name: 'index' }">
                   <a
                     class="
-                      bg-gray-900
+                      hover:bg-gray-900
                       text-white
                       block
                       px-3
@@ -33,10 +33,28 @@
                 </nuxt-link>
               </div>
             </div>
-            <div class="spacer"></div>
-            <nuxt-link :to="{ name: 'Login' }">
+            <div class="w-full"></div>
+            <div v-if="!auth">
+              <nuxt-link :to="{ name: 'Login' }">
+                <div class="hidden md:block">
+                  <a
+                    class="
+                      text-gray-100
+                      hover:bg-gray-700 hover:text-white
+                      block
+                      px-3
+                      py-2
+                      rounded-md
+                    "
+                    >Login</a
+                  >
+                </div>
+              </nuxt-link>
+            </div>
+            <div v-else>
               <div class="hidden md:block">
-                <a
+                <button
+                  @click="logout"
                   class="
                     text-gray-100
                     hover:bg-gray-700 hover:text-white
@@ -45,10 +63,11 @@
                     py-2
                     rounded-md
                   "
-                  >Login</a
                 >
+                  Logout
+                </button>
               </div>
-            </nuxt-link>
+            </div>
           </div>
         </div>
       </div>
@@ -59,7 +78,7 @@
           <nuxt-link class="mx-5" :to="{ name: 'index' }">
             <a
               class="
-                bg-gray-900
+                hover:bg-gray-900
                 text-white
                 block
                 px-3
@@ -97,14 +116,23 @@
 
 <script>
 export default {
+  data() {
+    return {
+      auth: false,
+    };
+  },
+  mounted() {
+    if (localStorage.getItem("token")) {
+      this.auth = true;
+    }
+  },
+  methods: {
+    logout() {
+      this.auth = false;
+      localStorage.clear();
+      this.$router.push("/");
+      window.location.reload();
+    },
+  },
 };
 </script>
-
-<style lang="scss" scoped>
-.body {
-  width: 100%;
-}
-.spacer {
-  width: 100%;
-}
-</style>

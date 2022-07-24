@@ -1,18 +1,68 @@
 <template>
   <div class="container mx-auto">
-    <div class="my-6 px-2 sm:mx-6 lg:mx-20">
+    <div v-if="$fetchState.pending" class="flex justify-center mt-20">
+      <div class="flex justify-center items-center">
+        Loading...
+      </div>
+    </div>
+    <div v-else class="my-6 px-2 sm:mx-6 lg:mx-20">
       <div class="lg:mx-20">
-        <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+        <div
+          v-if="!editMode"
+          class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900"
+        >
           {{ post.title }}
+        </div>
+        <div v-else>
+          <textarea
+            v-model="post.title"
+            class="
+              text-gray-900
+              font-bold
+              text-xl
+              sm:text-2xl
+              lg:text-3xl
+              p-2
+              block
+              h-32
+              w-full
+              text-sm
+              border
+              focus:outline-none
+              border-gray-300
+              rounded-md
+            "
+          />
         </div>
         <div class="text-2md py-2 text-gray-600">Author: {{ userName }}</div>
       </div>
-      <DivisorLine @deletePost="deletePost" :type="'button'" />
-      <div class="lg:mx-20 py-10">
+      <DivisorLine
+        @deletePost="deletePost"
+        @editPost="editPost"
+        @savePost="savePost"
+        :mode="editMode"
+        :type="'button'"
+      />
+      <div v-if="!editMode" class="lg:mx-20 py-10">
         {{ post.body }}
       </div>
+      <div v-else>
+        <textarea
+          v-model="post.body"
+          class="
+            shadow-sm
+            p-2
+            border
+            w-full
+            h-96
+            focus:outline-none
+            border-gray-300
+            rounded-md
+          "
+        />
+      </div>
       <DivisorLine :title="'COMENTARIOS'" />
-      <NewComment :userId="post.user_id" @newComment="newComment" />
+      <NewComment @newComment="newComment" />
       <CardComment :comments="comments" />
     </div>
   </div>
@@ -31,35 +81,36 @@ export default {
     DivisorLine,
   },
   data() {
-    return {};
+    return {
+      editMode: false,
+      post: {
+        title: "",
+        body: "",
+      },
+      userName: null,
+      comments: [],
+    };
   },
-  async asyncData(context) {
-    var resPost = await api({
+  async fetch() {
+    const resPost = await api({
       method: "GET",
-      url: "/posts/" + context.params.id,
+      url: "/posts/" + this.$route.params.id,
     });
-    var resUser = await api({
+    const resUser = await api({
       method: "GET",
       url: "/users/" + resPost.data.user_id,
     });
-    var resComments = await api({
+    const resComments = await api({
       method: "GET",
-      url: `/posts/${context.params.id}/comments`,
+      url: `/posts/${this.$route.params.id}/comments`,
     });
 
-    const userName = resUser.data.name;
-    const comments = resComments.data;
-
-    const post = {
+    this.post = {
       title: resPost.data.title,
       body: resPost.data.body,
     };
-
-    return {
-      post,
-      userName,
-      comments,
-    };
+    this.userName = resUser.data.name;
+    this.comments = resComments.data;
   },
   methods: {
     async deletePost() {
@@ -70,17 +121,28 @@ export default {
           Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
         },
       });
+      this.$router.push("/");
+    },
+    editPost() {
+      this.editMode = true;
+    },
+    async savePost() {
+      this.editMode = false;
+      await api({
+        method: "patch",
+        url: `/posts/${this.$route.params.id}`,
+        headers: {
+          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
+        },
+        data: this.post,
+      });
     },
     async newComment(payload) {
-      let data = {
-        body: payload.comment,
-        name: "String",
-        email: "luiz2@gmail.com",
-        postId: this.$route.params.id,
-      };
+      const data = payload;
+      data.postId = parseInt(this.$route.params.id);
       await api({
         method: "post",
-        url: `/posts/${this.$route.params.id}/comments`,
+        url: `/posts/${data.postId}/comments`,
         headers: {
           Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
         },
