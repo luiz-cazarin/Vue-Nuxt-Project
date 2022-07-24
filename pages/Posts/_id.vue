@@ -1,139 +1,92 @@
 <template>
-  <div>
+  <div class="container mx-auto">
     <div class="my-6 px-2 sm:mx-6 lg:mx-20">
-      <div class="lg:px-20">
-        <div class="text-3xl font-bold text-gray-900">
-          Acesso antecipado ao beta aberto de MultVersus começa hoje
+      <div class="lg:mx-20">
+        <div class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900">
+          {{ post.title }}
         </div>
-        <div class="text-2md py-2 text-gray-600">Author: Luiz Claudio</div>
+        <div class="text-2md py-2 text-gray-600">Author: {{ userName }}</div>
       </div>
-      <div class="box-line mt-3 mb-12 flex">
-        <div class="line-1"></div>
-        <div class="line-2"></div>
+      <DivisorLine @deletePost="deletePost" :type="'button'" />
+      <div class="lg:mx-20 py-10">
+        {{ post.body }}
       </div>
-      <!-- <div>{{ $route.params }}</div> -->
-      <div class="lg:px-20">
-        node_modules/babel-loader/lib??ref--2-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./pages/Posts/_id.vue?vue&type=template&id=13c8be35&
-        node_modules/babel-loader/lib??ref--2-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./pages/Posts/_id.vue?vue&type=template&id=13c8be35&
-        node_modules/babel-loader/lib??ref--2-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./pages/Posts/_id.vue?vue&type=template&id=13c8be35&
-        <br />
-        <br />
-        node_modules/babel-loader/lib??ref--2-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./pages/Posts/_id.vue?vue&type=template&id=13c8be35&
-        node_modules/babel-loader/lib??ref--2-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./pages/Posts/_id.vue?vue&type=template&id=13c8be35&
-        <br />
-        <br />
-        node_modules/babel-loader/lib??ref--2-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./pages/Posts/_id.vue?vue&type=template&id=13c8be35&
-        <br />
-        <br />
-        node_modules/babel-loader/lib??ref--2-0!./node_modules/vue-loader/lib/loaders/templateLoader.js??ref--6!./node_modules/vue-loader/lib??vue-loader-options!./pages/Posts/_id.vue?vue&type=template&id=13c8be35&
-      </div>
-      <div class="title mt-12 mb-3">COMENTARIOS</div>
-      <div class="box-line mb-10 flex">
-        <div class="line-1"></div>
-        <div class="line-2"></div>
-      </div>
-      <div class="chat p-3 rounded-md">
-        <div class="text-2md pb-2 font-semibold text-gray-800">
-          Author: Luiz Claudio
-        </div>
-        <textarea
-          name="chat"
-          id="chat"
-          class="input focus:outline-none p-1 rounded-sm"
-        />
-        <div class="w-full flex justify-end">
-          <button
-            role="button"
-            aria-label="create my account"
-            class="
-              my-2
-              text-sm
-              font-semibold
-              text-white
-              focus:outline-none
-              bg-purple-700
-              rounded
-              hover:bg-purple-600
-              py-2
-              px-4
-              md:w-1/6
-              xl:w-1/6
-            "
-          >
-            COMENTAR
-          </button>
-        </div>
-      </div>
-      <div v-for="c in comments" :key="c" class="chat-2 my-8 p-3 rounded-md">
-        <div class="text-2md pb-2 font-bold text-purple-600">
-          Author: {{ c.author }}
-        </div>
-        <div class="rounded-sm text-gray-900">
-          {{ c.body }}
-        </div>
-      </div>
+      <DivisorLine :title="'COMENTARIOS'" />
+      <NewComment :userId="post.user_id" @newComment="newComment" />
+      <CardComment :comments="comments" />
     </div>
   </div>
 </template>
 
 <script>
+import NewComment from "../../components/Posts/NewComment.vue";
+import CardComment from "../../components/Posts/CardComment.vue";
+import DivisorLine from "../../components/Utils/DivisorLine.vue";
+import api from "../../services/api";
+
 export default {
+  components: {
+    NewComment,
+    CardComment,
+    DivisorLine,
+  },
   data() {
-    return {
-      comments: [
-        {
-          author: "Luiz Claudio",
-          body: "Otimo post, recomendo! Otimo post, recomendo! Otimo post, recomendo!",
-        },
-        {
-          author: "Anonimo",
-          body: "Otimo post, recomendo! Otimo post, recomendo! Otimo post, recomendo!",
-        },
-        {
-          author: "Anonimo 2",
-          body: "Otimo post, recomendo! Otimo post, recomendo! Otimo post, recomendo!",
-        },
-      ],
+    return {};
+  },
+  async asyncData(context) {
+    var resPost = await api({
+      method: "GET",
+      url: "/posts/" + context.params.id,
+    });
+    var resUser = await api({
+      method: "GET",
+      url: "/users/" + resPost.data.user_id,
+    });
+    var resComments = await api({
+      method: "GET",
+      url: `/posts/${context.params.id}/comments`,
+    });
+
+    const userName = resUser.data.name;
+    const comments = resComments.data;
+
+    const post = {
+      title: resPost.data.title,
+      body: resPost.data.body,
     };
+
+    return {
+      post,
+      userName,
+      comments,
+    };
+  },
+  methods: {
+    async deletePost() {
+      await api({
+        method: "delete",
+        url: `/posts/${this.$route.params.id}`,
+        headers: {
+          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
+        },
+      });
+    },
+    async newComment(payload) {
+      let data = {
+        body: payload.comment,
+        name: "String",
+        email: "luiz2@gmail.com",
+        postId: this.$route.params.id,
+      };
+      await api({
+        method: "post",
+        url: `/posts/${this.$route.params.id}/comments`,
+        headers: {
+          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
+        },
+        data: data,
+      });
+    },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.chat {
-  width: 100%;
-  min-height: 200px;
-  background-color: rgb(0, 0, 0, 0.02);
-  box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
-  .input {
-    min-width: 100%;
-    min-height: 100px;
-    max-height: 200px;
-  }
-}
-
-.chat-2 {
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-  min-height: 100px;
-}
-
-.title {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-weight: 700;
-  font-size: 28px;
-  color: hsl(256, 62%, 56%);
-}
-.box-line {
-  .line-1 {
-    height: 5px;
-    background: hsl(256, 62%, 56%);
-    width: 45px;
-  }
-  .line-2 {
-    margin-top: 3px;
-    height: 2px;
-    background: hsl(0, 0%, 12%);
-    width: 100%;
-  }
-}
-</style>

@@ -31,21 +31,6 @@
                     >Home</a
                   >
                 </nuxt-link>
-                <nuxt-link :to="{ name: 'About' }">
-                  <a
-                    class="
-                      text-gray-300
-                      hover:bg-gray-700 hover:text-white
-                      block
-                      px-3
-                      py-2
-                      rounded-md
-                      text-base
-                      font-medium
-                    "
-                    >About</a
-                  >
-                </nuxt-link>
               </div>
             </div>
             <div class="spacer"></div>
@@ -87,21 +72,6 @@
               >Home</a
             >
           </nuxt-link>
-          <nuxt-link class="mx-5" :to="{ name: 'About' }">
-            <a
-              class="
-                text-gray-300
-                hover:bg-gray-700 hover:text-white
-                block
-                px-3
-                py-2
-                rounded-md
-                text-base
-                font-medium
-              "
-              >About</a
-            >
-          </nuxt-link>
           <nuxt-link class="mx-5" :to="{ name: 'Login' }">
             <a
               class="
@@ -127,9 +97,6 @@
 
 <script>
 export default {
-  // middleware() {
-  //   console.log("midleware...default");
-  // },
 };
 </script>
 
