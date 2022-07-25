@@ -14,7 +14,7 @@
               id="body"
               name="body"
               rows="4"
-              maxlength="1200"
+              maxlength="500"
               class="
                 shadow-sm
                 p-2
@@ -71,8 +71,8 @@ export default {
   mounted() {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user !== null) {
-      this.user = user[0];
-      this.userName = user[0].name;
+      this.user = user;
+      this.userName = user.name;
     }
   },
   methods: {

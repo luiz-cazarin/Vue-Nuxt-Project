@@ -8,13 +8,14 @@
         <AlertDialog v-if="alert" :type="alertType" :message="alertMessage" />
         <div
           v-if="!editMode"
-          class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900"
+          class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 break-words"
         >
           {{ post.title }}
         </div>
         <div v-else>
           <textarea
             v-model="post.title"
+            maxlength = "500"
             class="
               text-gray-900
               font-bold
@@ -42,7 +43,7 @@
         :mode="editMode"
         :type="'button'"
       />
-      <div v-if="!editMode" class="lg:mx-20 py-10">
+      <div v-if="!editMode" class="lg:mx-20 py-10 break-words">
         {{ post.body }}
       </div>
       <div v-else>
@@ -108,9 +109,6 @@ export default {
       const resPost = await api({
         method: "GET",
         url: "/posts/" + this.$route.params.id,
-        headers: {
-          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-        },
       });
       this.post = {
         title: resPost.data.title,
@@ -119,17 +117,11 @@ export default {
       const resUser = await api({
         method: "GET",
         url: "/users/" + resPost.data.user_id,
-        headers: {
-          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-        },
       });
       this.userName = resUser.data.name;
       const resComments = await api({
         method: "GET",
         url: `/posts/${this.$route.params.id}/comments`,
-        headers: {
-          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-        },
       });
       this.comments = resComments.data;
     } else {
@@ -141,9 +133,6 @@ export default {
       await api({
         method: "delete",
         url: `/posts/${this.$route.params.id}`,
-        headers: {
-          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-        },
       });
       this.$router.push("/");
     },
@@ -155,9 +144,6 @@ export default {
       const res = await api({
         method: "patch",
         url: `/posts/${this.$route.params.id}`,
-        headers: {
-          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-        },
         data: this.post,
       });
       if (res.status === 200) {
@@ -183,9 +169,6 @@ export default {
         const res = await api({
           method: "post",
           url: `/posts/${data.postId}/comments`,
-          headers: {
-            Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-          },
           data: data,
         });
         if (res.status == 201) {
@@ -195,9 +178,6 @@ export default {
           const resComments = await api({
             method: "GET",
             url: `/posts/${this.$route.params.id}/comments`,
-            headers: {
-              Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-            },
           });
           this.comments = resComments.data;
         }

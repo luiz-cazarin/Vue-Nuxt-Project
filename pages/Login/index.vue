@@ -25,6 +25,7 @@
             aria-label="enter email adress"
             role="input"
             type="email"
+            maxlength = "200"
             class="
               bg-gray-200
               border
@@ -51,6 +52,7 @@
               aria-label="enter Password"
               role="input"
               type="password"
+              maxlength = "200"
               class="
                 bg-gray-200
                 border
@@ -141,10 +143,7 @@ export default {
         // The api has no authentication, we are simulating it to be able to make the requests need the user's email
         const res = await api({
           method: "GET",
-          url: `/users?email=${user.email}`,
-          headers: {
-            Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-          },
+          url: `/users/?email=${user.email}`,
         });
         if (res.data.length === 0) {
           this.alert = true;
@@ -152,7 +151,7 @@ export default {
             this.alert = false;
           }, 2000);
         } else {
-          localStorage.setItem("user", JSON.stringify(res.data));
+          localStorage.setItem("user", JSON.stringify(res.data[0]));
           localStorage.setItem(
             "token",
             "6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"

@@ -25,6 +25,7 @@
             required
             aria-label="enter name"
             role="input"
+            maxlength="200"
             type="text"
             class="
               bg-gray-200
@@ -53,6 +54,7 @@
               aria-label="enter email adress"
               role="input"
               type="email"
+              maxlength="200"
               class="
                 bg-gray-200
                 border
@@ -81,6 +83,7 @@
               aria-label="enter Password"
               role="input"
               type="password"
+              maxlength="200"
               class="
                 bg-gray-200
                 border
@@ -202,15 +205,22 @@ export default {
         this.user.password !== null &&
         this.user.gender !== null
       ) {
-        await api({
-          method: "post",
-          url: "/users",
-          headers: {
-            Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-          },
-          data: this.user,
+        const res = await api({
+          method: "get",
+          url: "/users/?email=" + this.user.email,
         });
-        this.$router.push("/Login");
+        if (res.data.length === 0) {
+          await api({
+            method: "post",
+            url: "/users",
+            data: this.user,
+          });
+          this.$router.push("/Login");
+        } else {
+          this.alertType = "error";
+          this.alertMessage = "The user already exists!";
+          this.alert = true;
+        }
       } else {
         this.alertType = "error";
         this.alertMessage = "Error registering user!";

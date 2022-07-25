@@ -28,6 +28,7 @@
                   w-full
                   hover:bg-gray-200
                   duration-100
+                  break-words
                 "
               >
                 <nuxt-link :to="`Posts/${el.id}`">
@@ -70,9 +71,6 @@ export default Vue.extend({
     const resPosts = await api({
       method: "GET",
       url: "/posts",
-      headers: {
-        Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-      },
     });
     this.posts = resPosts.data;
   },
@@ -94,9 +92,6 @@ export default Vue.extend({
       const resPosts = await api({
         method: "GET",
         url: "/posts",
-        headers: {
-          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-        },
       });
       this.posts = resPosts.data;
     },

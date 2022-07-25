@@ -12,6 +12,7 @@
               id="title"
               name="title"
               type="text"
+              maxlength = "200"
               class="
                 shadow-sm
                 p-2
@@ -41,6 +42,7 @@
               id="body"
               name="body"
               rows="8"
+              maxlength = "500"
               class="
                 shadow-sm
                 p-2
@@ -96,16 +98,13 @@ export default {
       if (this.title !== null && this.body !== null) {
         const user = JSON.parse(localStorage.getItem("user"));
         const data = {
-          user_id: user[0].id,
+          user_id: user.id,
           title: this.title,
           body: this.body,
         };
         await api({
           method: "post",
-          url: `/users/${user[0].id}/posts`,
-          headers: {
-            Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-          },
+          url: `/users/${user.id}/posts`,
           data: data,
         });
         this.title = null;
