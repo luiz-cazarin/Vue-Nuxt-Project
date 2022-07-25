@@ -24,7 +24,7 @@
                 border-gray-300
                 rounded-md
               "
-              placeholder="Title"
+              placeholder="Title:"
             />
           </div>
         </div>
@@ -53,7 +53,7 @@
                 border-gray-300
                 rounded-md
               "
-              placeholder="Digite aqui!"
+              placeholder="Text:"
             />
           </div>
         </div>
@@ -87,30 +87,31 @@ import api from "../services/api";
 export default {
   data() {
     return {
-      title: "",
-      body: "",
+      title: null,
+      body: null,
     };
   },
   methods: {
     async createPost() {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const data = {
-        user_id: user.id,
-        title: this.title,
-        body: this.body,
-      };
-      console.log(data);
-      const res = await api({
-        method: "post",
-        url: `/users/${user.id}/posts`,
-        headers: {
-          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
-        },
-        data: data,
-      });
-      this.title = null;
-      this.body = null;
-      window.location.reload();
+      if (this.title !== null && this.body !== null) {
+        const user = JSON.parse(localStorage.getItem("user"));
+        const data = {
+          user_id: user[0].id,
+          title: this.title,
+          body: this.body,
+        };
+        await api({
+          method: "post",
+          url: `/users/${user[0].id}/posts`,
+          headers: {
+            Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
+          },
+          data: data,
+        });
+        this.title = null;
+        this.body = null;
+        this.$emit("updateListPost");
+      }
     },
   },
 };

@@ -138,9 +138,13 @@ export default {
           email: this.email,
           password: this.password,
         };
+        // The api has no authentication, we are simulating it to be able to make the requests need the user's email
         const res = await api({
           method: "GET",
           url: `/users?email=${user.email}`,
+          headers: {
+            Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
+          },
         });
         if (res.data.length === 0) {
           this.alert = true;
@@ -148,13 +152,18 @@ export default {
             this.alert = false;
           }, 2000);
         } else {
-          localStorage.setItem("user", JSON.stringify(res.data[0]));
+          localStorage.setItem("user", JSON.stringify(res.data));
           localStorage.setItem(
             "token",
             "6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"
           ); // default token, could not authenticate via (gorest.co.in)
           this.$router.push("/");
         }
+      } else {
+        this.alert = true;
+        setTimeout(() => {
+          this.alert = false;
+        }, 2000);
       }
     },
   },

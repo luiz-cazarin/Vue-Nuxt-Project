@@ -183,24 +183,24 @@ export default {
   data() {
     return {
       user: {
-        name: "",
-        email: "",
-        password: "",
-        gender: "",
+        name: null,
+        email: null,
+        password: null,
+        gender: null,
         status: "active",
       },
       alert: false,
       alertType: null,
-      alertMessage: null,
+      alertMessage: [],
     };
   },
   methods: {
     async registerUser() {
       if (
-        this.user.name !== "" &&
-        this.user.email !== "" &&
-        this.user.password !== "" &&
-        this.user.gender !== ""
+        this.user.name !== null &&
+        this.user.email !== null &&
+        this.user.password !== null &&
+        this.user.gender !== null
       ) {
         await api({
           method: "post",
@@ -210,8 +210,7 @@ export default {
           },
           data: this.user,
         });
-        this.alertType = "success";
-        this.alertMessage = "User registered successfully!";
+        this.$router.push("/Login");
       } else {
         this.alertType = "error";
         this.alertMessage = "Error registering user!";

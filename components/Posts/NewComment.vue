@@ -3,22 +3,16 @@
     <div class="bg-gray-50">
       <div class="max-w-7xl py-6 px-4 sm:px-6">
         <div>
-          <div
-            v-if="userAuth"
-            class="text-2md pb-2 font-semibold text-gray-800"
-          >
+          <div class="text-2md pb-2 font-semibold text-gray-800">
             Author: {{ userName }}
-          </div>
-          <div v-else class="text-2md pb-2 font-semibold text-gray-800">
-            Faça login para comentar
           </div>
         </div>
         <div>
           <div class="mt-1">
             <textarea
-              v-model="bodyText"
-              id="bodyText"
-              name="bodyText"
+              v-model="body"
+              id="body"
+              name="body"
               rows="4"
               maxlength="1200"
               class="
@@ -34,7 +28,7 @@
                 border-gray-300
                 rounded-md
               "
-              placeholder="Digite aqui!"
+              placeholder="Type here:"
             />
           </div>
         </div>
@@ -69,33 +63,27 @@
 export default {
   data() {
     return {
-      userName: "",
-      bodyText: "",
-      userAuth: false,
+      body: null,
       user: null,
+      userName: "",
     };
   },
   mounted() {
     const user = JSON.parse(localStorage.getItem("user"));
-    this.user = user;
     if (user !== null) {
-      this.userAuth = true;
-      this.userName = user.name;
-    } else {
-      this.userAuth = false;
+      this.user = user[0];
+      this.userName = user[0].name;
     }
   },
   methods: {
     newComment() {
-      if (this.bodyText !== "" && this.userAuth) {
-        const data = {
-          name: this.user.name,
-          email: this.user.email,
-          body: this.bodyText,
-        };
-        this.$emit("newComment", data);
-      }
-      this.bodyText = null;
+      const data = {
+        name: this.user.name,
+        email: this.user.email,
+        body: this.body,
+      };
+      this.$emit("newComment", data);
+      this.body = null;
     },
   },
 };

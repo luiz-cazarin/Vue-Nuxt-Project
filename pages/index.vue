@@ -4,14 +4,20 @@
       <div class="max-w mx-auto py-6 sm:px-6 lg:px-40">
         <div>
           <DivisorLine class="mx-2" :title="'Posts!'" />
+          <div v-if="!auth" class="font-semibold py-5 flex justify-center">
+            Make login to create a post!
+          </div>
           <!-- new post -->
-          <CreatePost v-if="auth" />
+          <CreatePost v-if="auth" @updateListPost="updateListPost" />
           <!-- post list -->
           <div v-if="$fetchState.pending" class="flex justify-center">
             Loading...
           </div>
           <div v-else class="flex justify-center">
-            <ul class="bg-white rounded-md w-full mx-3 text-gray-800">
+            <ul
+              v-if="hasPost"
+              class="bg-white rounded-md w-full mx-3 text-gray-800"
+            >
               <li
                 v-for="el in posts"
                 :key="el.id"
@@ -33,6 +39,9 @@
                 </nuxt-link>
               </li>
             </ul>
+            <div v-else class="text-xl pt-5 font-semibold">
+              There are no posts
+            </div>
           </div>
         </div>
       </div>
@@ -60,7 +69,10 @@ export default Vue.extend({
   async fetch() {
     const resPosts = await api({
       method: "GET",
-      url: "/posts?_limit=3",
+      url: "/posts",
+      headers: {
+        Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
+      },
     });
     this.posts = resPosts.data;
   },
@@ -68,6 +80,26 @@ export default Vue.extend({
     if (localStorage.getItem("token")) {
       this.auth = true;
     }
+  },
+  computed: {
+    hasPost() {
+      if (this.posts.length > 0) {
+        return true;
+      }
+      return false;
+    },
+  },
+  methods: {
+    async updateListPost() {
+      const resPosts = await api({
+        method: "GET",
+        url: "/posts",
+        headers: {
+          Authorization: `Bearer ${"6cce40afa14cbbdcca7c34aa019974ba94a130ad003d1a4bdf8dce053419b61c"}`,
+        },
+      });
+      this.posts = resPosts.data;
+    },
   },
 });
 </script>
