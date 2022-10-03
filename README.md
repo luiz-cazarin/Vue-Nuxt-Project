@@ -23,3 +23,4 @@ yarn install or npm install
 ```
 yarn serve or npm run dev
 ```
+![IMG-6 2cf35bceb039edc1dd53](https://user-images.githubusercontent.com/57879201/193667955-4feeda32-b1a6-4342-b381-90988064e68b.png)
